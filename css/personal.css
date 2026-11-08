@@ -1,0 +1,45 @@
+#autosort { max-width: 1320px; }
+#autosort h2 { display: block; margin-top: 28px; }
+#autosort h2:first-child { margin-top: 0; }
+#autosort .autosort-hint { color: var(--color-text-maxcontrast); margin-bottom: 12px; }
+#autosort .autosort-warning { padding: 10px 14px; margin-bottom: 16px; border-radius: var(--border-radius-large); background: var(--color-warning); color: var(--color-warning-text, #000); }
+#autosort .autosort-field { display: block; margin-bottom: 12px; }
+#autosort .autosort-field > span { display: block; font-weight: bold; margin-bottom: 4px; }
+#autosort .autosort-field small { display: block; color: var(--color-text-maxcontrast); margin-top: 2px; }
+#autosort .autosort-row { display: flex; gap: 8px; align-items: center; }
+#autosort input[type=text], #autosort textarea { width: 100%; margin: 0; box-sizing: border-box; }
+#autosort textarea { min-height: 96px; resize: vertical; }
+#autosort .autosort-rule { padding: 14px 16px 6px; margin-bottom: 14px; border: 1px solid var(--color-border-dark); border-radius: var(--border-radius-large); }
+#autosort .autosort-rule.disabled { opacity: .6; }
+#autosort .autosort-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 8px; }
+#autosort .autosort-actions .autosort-spacer { flex: 1; }
+#autosort button { margin: 0; white-space: nowrap; }
+#autosort .autosort-result { margin-top: 12px; padding: 12px 14px; border-radius: var(--border-radius-large); background: var(--color-background-dark); overflow-wrap: anywhere; }
+#autosort .autosort-result ul { margin: 6px 0 12px; }
+#autosort .autosort-found { color: var(--color-success-text, green); }
+#autosort .autosort-missing { color: var(--color-error-text, red); }
+#autosort .autosort-log { width: 100%; border-collapse: collapse; }
+#autosort .autosort-log th, #autosort .autosort-log td { padding: 6px 8px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--color-border); overflow-wrap: anywhere; }
+#autosort .autosort-log th { font-weight: bold; }
+#autosort .autosort-log-error td { color: var(--color-error-text, red); }
+#autosort .autosort-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; }
+#autosort .autosort-grid .autosort-row { flex-wrap: wrap; }
+#autosort .autosort-preset { width: 100%; margin: 6px 0 0; }
+#autosort .autosort-category { margin-bottom: 10px; padding: 8px 14px; border: 1px solid var(--color-border-dark); border-radius: var(--border-radius-large); }
+#autosort .autosort-category > summary { cursor: pointer; padding: 4px 0; }
+#autosort .autosort-category[open] > summary { margin-bottom: 10px; }
+#autosort .autosort-count { color: var(--color-text-maxcontrast); }
+#autosort .autosort-inline { display: inline-flex; align-items: center; gap: 6px; }
+#autosort .autosort-inline input[type=text] { width: 180px; }
+#autosort .autosort-new-category { max-width: 520px; margin-top: 12px; }
+@media (max-width: 1400px) { #autosort .autosort-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (max-width: 1000px) { #autosort .autosort-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 620px) { #autosort .autosort-grid { grid-template-columns: minmax(0, 1fr); } }
+#autosort .autosort-link { text-decoration: underline; }
+#autosort [hidden] { display: none !important; }
+#autosort .autosort-subcategory { margin: 0 0 10px 12px; padding: 6px 12px; border-left: 3px solid var(--color-border-dark); }
+#autosort .autosort-subcategory > summary { cursor: pointer; padding: 4px 0; }
+#autosort .autosort-subcategory[open] > summary { margin-bottom: 8px; }
+#autosort .autosort-search { max-width: 520px; margin-bottom: 12px; }
+#autosort .autosort-search .autosort-hint { margin: 0; white-space: nowrap; }
+#autosort input[type=search] { width: 100%; margin: 0; box-sizing: border-box; }
