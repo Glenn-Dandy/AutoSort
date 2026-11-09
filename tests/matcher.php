@@ -1,9 +1,8 @@
 <?php
+require __DIR__ . '/bootstrap.php';
 require __DIR__ . '/../lib/Service/RuleMatcher.php';
 use OCA\AutoSort\Service\RuleMatcher as M;
-$fail = 0;
-function check(string $name, $got, $want): void { global $fail; if ($got === $want) { echo "ok   $name\n"; } else { $fail++; echo "FAIL $name: "; var_dump($got); } }
-$d = fn ($x) => $x?->format('Y-m-d');
+$d =fn ($x) => $x?->format('Y-m-d');
 check('term spaces', M::containsTerm("Nr.  123\n456 789", '123 456 789'), true);
 check('term joined', M::containsTerm('AB-CD123', 'AB-CD 123'), true);
 check('term case', M::containsTerm('BEITRAGSRECHNUNG', 'Beitragsrechnung'), true);
@@ -35,5 +34,4 @@ check('blank keeps', M::buildFilename(' ', null, 'scan.pdf'), 'scan.pdf');
 check('slash stripped', M::buildFilename('a/b\\c', null, 'x.pdf'), 'a-b-c.pdf');
 check('usesDate', M::usesDate('{Original}.pdf'), false);
 check('usesDate 2', M::usesDate('x/{Jahr}'), true);
-echo $fail ? "$fail FEHLER\n" : "alle ok\n";
-exit($fail ? 1 : 0);
+finish();

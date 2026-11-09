@@ -134,33 +134,21 @@ class RuleController extends Controller {
     #[NoAdminRequired]
     #[FrontpageRoute(verb: 'POST', url: '/category')]
     public function renameCategory(string $old = '', string $new = ''): DataResponse {
-        $new = trim($new);
-        if ($new === '' || mb_strlen($new) > 100) {
-            return $this->invalid('Please enter a category name of up to 100 characters');
-        }
-        foreach ($this->ruleMapper->findAllForUser($this->userId) as $rule) {
-            if (($rule->getCategory() ?? '') === $old) {
-                $rule->setCategory($new);
-                $this->ruleMapper->update($rule);
-            }
-        }
-        return new DataResponse(['name' => $new]);
+        return $this->renameInRules(
+            $new,
+            static fn (Rule $rule) => ($rule->getCategory() ?? '') === $old,
+            static fn (Rule $rule, string $name) => $rule->setCategory($name),
+        );
     }
 
     #[NoAdminRequired]
     #[FrontpageRoute(verb: 'POST', url: '/subcategory')]
     public function renameSubcategory(string $category = '', string $old = '', string $new = ''): DataResponse {
-        $new = trim($new);
-        if ($new === '' || mb_strlen($new) > 100) {
-            return $this->invalid('Please enter a category name of up to 100 characters');
-        }
-        foreach ($this->ruleMapper->findAllForUser($this->userId) as $rule) {
-            if (($rule->getCategory() ?? '') === $category && ($rule->getSubcategory() ?? '') === $old) {
-                $rule->setSubcategory($new);
-                $this->ruleMapper->update($rule);
-            }
-        }
-        return new DataResponse(['name' => $new]);
+        return $this->renameInRules(
+            $new,
+            static fn (Rule $rule) => ($rule->getCategory() ?? '') === $category && ($rule->getSubcategory() ?? '') === $old,
+            static fn (Rule $rule, string $name) => $rule->setSubcategory($name),
+        );
     }
 
     /** Shows what would happen to a PDF without changing anything */
@@ -206,6 +194,20 @@ class RuleController extends Controller {
     public function clearLog(): DataResponse {
         $this->logMapper->clear($this->userId);
         return new DataResponse([]);
+    }
+
+    private function renameInRules(string $new, callable $matches, callable $rename): DataResponse {
+        $new = trim($new);
+        if ($new === '' || mb_strlen($new) > 100) {
+            return $this->invalid('Please enter a category name of up to 100 characters');
+        }
+        foreach ($this->ruleMapper->findAllForUser($this->userId) as $rule) {
+            if ($matches($rule)) {
+                $rename($rule, $new);
+                $this->ruleMapper->update($rule);
+            }
+        }
+        return new DataResponse(['name' => $new]);
     }
 
     private function apply(Rule $rule, array $terms, array $termsAny, string $target, string $filename, string $dateAfter, string $category, string $subcategory, bool $enabled): ?DataResponse {

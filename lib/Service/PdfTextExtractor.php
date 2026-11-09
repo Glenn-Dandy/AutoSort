@@ -10,6 +10,11 @@ use OCP\ITempManager;
 use RuntimeException;
 
 class PdfTextExtractor {
+    // A damaged or crafted PDF must neither block the job nor fill the memory
+    private const TIMEOUT_SECONDS = 60;
+    private const MAX_TEXT_BYTES = 10485760;
+    private const SIGKILL = 9;
+
     public function __construct(private IBinaryFinder $binaryFinder, private ITempManager $tempManager) {
     }
 
@@ -38,14 +43,48 @@ class PdfTextExtractor {
             fclose($source);
             fclose($target);
 
-            exec(escapeshellarg($binary) . ' -enc UTF-8 ' . escapeshellarg($tempFile) . ' - 2>/dev/null', $output, $exitCode);
-            if ($exitCode !== 0) {
-                throw new RuntimeException('pdftotext failed with exit code ' . $exitCode);
-            }
-
-            return mb_scrub(implode("\n", $output), 'UTF-8');
+            // Every page ends with a form feed, which trim() would not treat as empty on a PDF without text
+            return mb_scrub(str_replace("\f", "\n", $this->readText($binary, $tempFile)), 'UTF-8');
         } finally {
             @unlink($tempFile);
         }
+    }
+
+    private function readText(string $binary, string $path): string {
+        $process = proc_open([$binary, '-enc', 'UTF-8', $path, '-'], [0 => ['file', '/dev/null', 'r'], 1 => ['pipe', 'w'], 2 => ['file', '/dev/null', 'w']], $pipes);
+        if (!is_resource($process)) {
+            throw new RuntimeException('pdftotext could not be started');
+        }
+
+        $deadline = time() + self::TIMEOUT_SECONDS;
+        $text = '';
+        $failure = null;
+        stream_set_blocking($pipes[1], false);
+        while ($failure === null && !feof($pipes[1])) {
+            $read = [$pipes[1]];
+            $write = null;
+            $except = null;
+            if (@stream_select($read, $write, $except, 1) > 0) {
+                $text .= (string)fread($pipes[1], 65536);
+            }
+            if (strlen($text) > self::MAX_TEXT_BYTES) {
+                $failure = 'The PDF contains too much text';
+            } elseif (time() > $deadline) {
+                $failure = 'pdftotext took too long';
+            }
+        }
+        fclose($pipes[1]);
+
+        if ($failure !== null) {
+            proc_terminate($process, self::SIGKILL);
+        }
+        $exitCode = proc_close($process);
+        if ($failure !== null) {
+            throw new RuntimeException($failure);
+        }
+        if ($exitCode !== 0) {
+            throw new RuntimeException('pdftotext failed with exit code ' . $exitCode);
+        }
+        return $text;
     }
 }

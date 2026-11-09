@@ -54,7 +54,7 @@ Property tax
 
 ## Development
 
-The app has no build step: plain PHP and JavaScript. Copy or link this folder to `custom_apps/autosort` and enable it with `occ app:enable autosort`. `php tests/matcher.php` runs the text matching tests.
+The app has no build step: plain PHP and JavaScript. Copy or link this folder to `custom_apps/autosort` and enable it with `occ app:enable autosort`. The tests need no Nextcloud: `php tests/matcher.php`, `php tests/rules.php` and `php tests/extractor.php`.
 
 ## License
 

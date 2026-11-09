@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.1
+
+- Reading a PDF stops after 60 seconds or 10 MB of text
+
 ## 0.8.0
 
 - `{Treffer}` puts the first matching OR word into the file name
