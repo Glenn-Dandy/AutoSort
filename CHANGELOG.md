@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.2
+
+- Recognizes short month names such as `8. Jul 2026` and dates without a dot after the day
+
 ## 0.8.1
 
 - Reading a PDF stops after 60 seconds or 10 MB of text

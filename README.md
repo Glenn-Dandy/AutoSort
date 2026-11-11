@@ -40,7 +40,7 @@ Rules are checked from top to bottom and the first one that fits is used. Subfol
 | `{Original}` | Original file name |
 | `{Treffer}` | The first word of the OR list that occurs in the document |
 
-The list next to the file name inserts them for you. A rule that needs a date and finds none does not apply, so no half-finished names are created.
+The list next to the file name inserts them for you. A rule that needs a date and finds none does not apply, so no half-finished names are created. Dates need a year and are recognized as `8.6.2026`, `08.06.2026`, `8. Juni 2026` or `8. Jun 2026`.
 
 ### Example: one rule for many kinds of letters
 

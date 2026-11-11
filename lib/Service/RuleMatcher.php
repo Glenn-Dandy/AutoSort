@@ -12,8 +12,10 @@ class RuleMatcher {
     private const DATE_BLOCK = '/\{((?:JJJJ|JJ|MM|TT)(?:[._ -]?(?:JJJJ|JJ|MM|TT))*)\}/';
 
     private const MONTHS = [
-        'januar' => 1, 'februar' => 2, 'märz' => 3, 'maerz' => 3, 'april' => 4, 'mai' => 5, 'juni' => 6,
-        'juli' => 7, 'august' => 8, 'september' => 9, 'oktober' => 10, 'november' => 11, 'dezember' => 12,
+        'januar' => 1, 'jan' => 1, 'februar' => 2, 'feb' => 2, 'märz' => 3, 'maerz' => 3, 'mär' => 3, 'mrz' => 3,
+        'april' => 4, 'apr' => 4, 'mai' => 5, 'juni' => 6, 'jun' => 6, 'juli' => 7, 'jul' => 7, 'august' => 8, 'aug' => 8,
+        'september' => 9, 'sept' => 9, 'sep' => 9, 'oktober' => 10, 'okt' => 10, 'november' => 11, 'nov' => 11,
+        'dezember' => 12, 'dez' => 12,
     ];
 
     // Words may be split or joined differently by OCR and numbers are often grouped,
@@ -39,7 +41,7 @@ class RuleMatcher {
         }
 
         $months = implode('|', array_keys(self::MONTHS));
-        $pattern = '/(?<!\d)(\d{1,2})\.\s*(?:(\d{1,2})\.\s*|(' . $months . ')\s+)((?:19|20)\d{2})(?!\d)/iu';
+        $pattern = '/(?<!\d)(\d{1,2})(?:\.\s*(\d{1,2})\.\s*|\.?\s*(' . $months . ')(?:\.\s*|\s+))((?:19|20)\d{2})(?!\d)/iu';
         if (preg_match_all($pattern, $text, $matches, PREG_SET_ORDER) === false) {
             return null;
         }

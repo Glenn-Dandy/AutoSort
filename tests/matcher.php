@@ -17,7 +17,24 @@ check('first date', $d(M::findDate("Musterstadt, 23.11.2024\nAm 01.01.2025")), '
 check('skip invalid', $d(M::findDate('99.99.2024 dann 05.03.2024')), '2024-03-05');
 check('short date', $d(M::findDate('am 1.2.2025')), '2025-02-01');
 check('written month', $d(M::findDate('den 3. März 2024')), '2024-03-03');
-check('date after', $d(M::findDate('Beginn 01.01.2020 Rechnungsdatum: 14.10.2026', 'Rechnungsdatum')), '2026-10-14');
+check('full month', $d(M::findDate('Musterstadt, 8. Juli 2026')), '2026-07-08');
+check('lower case month', $d(M::findDate('den 8. juli 2026')), '2026-07-08');
+check('upper case month', $d(M::findDate('8. MÄRZ 2026')), '2026-03-08');
+check('leading zero with month', $d(M::findDate('08. Juni 2026')), '2026-06-08');
+check('short numbers', $d(M::findDate('am 8.6.2026')), '2026-06-08');
+check('zero padded numbers', $d(M::findDate('am 08.06.2026')), '2026-06-08');
+foreach (['Jan' => '01', 'Feb' => '02', 'Mär' => '03', 'Mrz' => '03', 'Apr' => '04', 'Mai' => '05', 'Jun' => '06', 'Jul' => '07', 'Aug' => '08', 'Sep' => '09', 'Sept' => '09', 'Okt' => '10', 'Nov' => '11', 'Dez' => '12'] as $short => $number) {
+    check("short month $short", $d(M::findDate("8. $short 2026")), "2026-$number-08");
+    check("short month $short with dot", $d(M::findDate("8. $short. 2026")), "2026-$number-08");
+}
+check('no dot after the day', $d(M::findDate('8 Juli 2026')), '2026-07-08');
+check('short month, no dots', $d(M::findDate('8 Jul 2026')), '2026-07-08');
+check('month on the next line', $d(M::findDate("8. Juli\n2026")), '2026-07-08');
+check('year is required', M::findDate('am 8.6. und am 08.06. und am 8. Juni'), null);
+check('other word after the day', M::findDate('8. Julia 2026'), null);
+check('day that does not exist', M::findDate('31. Juni 2026'), null);
+check('part of a longer number', M::findDate('108 Juli 2026'), null);
+check('date after',$d(M::findDate('Beginn 01.01.2020 Rechnungsdatum: 14.10.2026', 'Rechnungsdatum')), '2026-10-14');
 check('date after absent', M::findDate('01.01.2020', 'Rechnungsdatum'), null);
 check('no date in number', M::findDate('123.11.20245'), null);
 $date = new DateTimeImmutable('2024-11-23');
