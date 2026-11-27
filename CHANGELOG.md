@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.3
+
+- Recognizes dates with a two-digit year such as `24.11.26` (thanks to @cranberriesvideo)
+
 ## 0.8.2
 
 - Recognizes short month names such as `8. Jul 2026` and dates without a dot after the day
