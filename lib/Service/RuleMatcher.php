@@ -41,7 +41,7 @@ class RuleMatcher {
         }
 
         $months = implode('|', array_keys(self::MONTHS));
-        $pattern = '/(?<!\d)(\d{1,2})(?:\.\s*(\d{1,2})\.\s*|\.?\s*(' . $months . ')(?:\.\s*|\s+))((?:19|20)\d{2})(?!\d)/iu';
+        $pattern = '/(?<!\d)(\d{1,2})(?:\.\s*(\d{1,2})\.\s*|\.?\s*(' . $months . ')(?:\.\s*|\s+))((?:(?:19|20)\d{2})|\d{2})(?!\d)/iu';
         if (preg_match_all($pattern, $text, $matches, PREG_SET_ORDER) === false) {
             return null;
         }
@@ -50,6 +50,15 @@ class RuleMatcher {
             $day = (int)$found[1];
             $month = $found[2] !== '' ? (int)$found[2] : self::MONTHS[mb_strtolower($found[3])];
             $year = (int)$found[4];
+            // Interpret two-digit years
+            // 69 cutoff follows the conventional PHP-style two-digit year interpretation
+            if ($year < 100) {
+                // two-digit years only in the numeric form like 24.11.26
+                if ($found[2] === '') {
+                    continue;
+                }
+                $year += ($year <= 69) ? 2000 : 1900;
+            }
             if (checkdate($month, $day, $year)) {
                 return new DateTimeImmutable(sprintf('%04d-%02d-%02d', $year, $month, $day));
             }
