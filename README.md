@@ -22,6 +22,8 @@ Every user sets up their own rules in **Personal settings > AutoSort**. A rule s
 - `pdftotext` on the server (`sudo apt install poppler-utils`)
 - PDFs with a text layer. Scans need OCR first, for example with [Workflow OCR](https://apps.nextcloud.com/apps/workflow_ocr)
 
+Step-by-step guide with screenshots for AutoSort together with Workflow OCR: [English](https://wozise.de/en/guides/autosort-workflow-ocr/), [Deutsch](https://wozise.de/anleitungen/autosort-workflow-ocr/)
+
 ## Usage
 
 1. Open **Personal settings > AutoSort** and save an inbox folder.
